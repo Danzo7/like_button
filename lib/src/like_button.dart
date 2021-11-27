@@ -157,6 +157,7 @@ class LikeButtonState extends State<LikeButton> with TickerProviderStateMixin {
     _isLiked = widget.isLiked;
     _likeCount = widget.likeCount;
     _preLikeCount = _likeCount;
+    widget.controller?..removeListener(onTap)..addListener(onTap);
     if (_controller?.duration != widget.animationDuration) {
       _controller?.dispose();
       _controller =
