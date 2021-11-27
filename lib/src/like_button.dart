@@ -7,6 +7,7 @@ import 'package:like_button/src/painter/bubbles_painter.dart';
 import 'package:like_button/src/utils/like_button_model.dart';
 import 'package:like_button/src/utils/like_button_typedef.dart';
 import 'package:like_button/src/utils/like_button_util.dart';
+
 class LikeButton extends StatefulWidget {
   const LikeButton(
       {Key? key,
@@ -34,10 +35,18 @@ class LikeButton extends StatefulWidget {
       this.onTap,
       this.countPostion = CountPostion.right,
       this.padding,
-      this.countDecoration})
+      this.countDecoration,
+      this.controller,
+      this.internalTap = true})
       : bubblesSize = bubblesSize ?? size * 2.0,
         circleSize = circleSize ?? size * 0.8,
         super(key: key);
+
+  ///used to control tap event externally
+  final TapController? controller;
+
+  ///if false internal tap behavior will be disabled
+  final bool internalTap;
 
   ///size of like widget
   final double size;
@@ -124,7 +133,7 @@ class LikeButtonState extends State<LikeButton> with TickerProviderStateMixin {
     _isLiked = widget.isLiked;
     _likeCount = widget.likeCount;
     _preLikeCount = _likeCount;
-
+    widget.controller?.addListener(onTap);
     _controller =
         AnimationController(duration: widget.animationDuration, vsync: this);
     _likeCountController = AnimationController(
@@ -160,6 +169,7 @@ class LikeButtonState extends State<LikeButton> with TickerProviderStateMixin {
   void dispose() {
     _controller!.dispose();
     _likeCountController!.dispose();
+    widget.controller?.dispose();
     super.dispose();
   }
 
@@ -259,11 +269,13 @@ class LikeButtonState extends State<LikeButton> with TickerProviderStateMixin {
       );
     }
 
-    return GestureDetector(
-      behavior: HitTestBehavior.translucent,
-      onTap: onTap,
-      child: result,
-    );
+    return widget.internalTap
+        ? GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: onTap,
+            child: result,
+          )
+        : result;
   }
 
   Widget _getLikeCountWidget() {
