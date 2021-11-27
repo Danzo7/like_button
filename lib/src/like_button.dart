@@ -7,6 +7,7 @@ import 'package:like_button/src/painter/bubbles_painter.dart';
 import 'package:like_button/src/utils/like_button_model.dart';
 import 'package:like_button/src/utils/like_button_typedef.dart';
 import 'package:like_button/src/utils/like_button_util.dart';
+import 'package:like_button/src/utils/tap_controller.dart';
 
 class LikeButton extends StatefulWidget {
   const LikeButton(
